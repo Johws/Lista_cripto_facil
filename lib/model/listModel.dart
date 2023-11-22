@@ -1,6 +1,6 @@
+import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:lista_cripto_facil/controller/coinEntendide.dart';
-import 'dart:convert';
 
 class ListModel {
   Future<List<CoinEntidade>> fetchData() async {

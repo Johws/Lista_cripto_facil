@@ -1,40 +1,40 @@
 class CoinEntidade {
-  final int id;
-  final int type;
-  final int timestamp;
-  final int actionType;
-  final double lastTradePrice;
-  final int orders;
-  final double price;
-  final int instrumentId;
-  final double quantity;
-  final int lanceType;
+  final String id;
+  final String rank;
+  final String symbol;
+  final String name;
+  final String supply;
+  final String maxSupply;
+  final String marketCapUsd;
+  final double volumeUsd24Hr;
+  final double priceUsd;
+  final double changePercent24Hr;
 
   CoinEntidade({
     required this.id,
-    required this.type,
-    required this.timestamp,
-    required this.actionType,
-    required this.lastTradePrice,
-    required this.orders,
-    required this.price,
-    required this.instrumentId,
-    required this.quantity,
-    required this.lanceType,
+    required this.rank,
+    required this.symbol,
+    required this.name,
+    required this.supply,
+    required this.maxSupply,
+    required this.marketCapUsd,
+    required this.volumeUsd24Hr,
+    required this.priceUsd,
+    required this.changePercent24Hr,
   });
 
-  factory CoinEntidade.fromJson(List<dynamic> json) {
+  factory CoinEntidade.fromJson(Map<String, dynamic> json) {
     return CoinEntidade(
-      id: json[0] as int,
-      type: json[1] as int,
-      timestamp: json[2] as int,
-      actionType: json[3] as int,
-      lastTradePrice: (json[4] as num).toDouble(),
-      orders: json[5] as int,
-      price: (json[6] as num).toDouble(),
-      instrumentId: json[7] as int,
-      quantity: (json[8] as num).toDouble(),
-      lanceType: json[9] as int,
+      id: json['id'],
+      rank: json['rank'],
+      symbol: json['symbol'],
+      name: json['name'],
+      supply: json['supply'],
+      maxSupply: json['maxSupply'],
+      marketCapUsd: json['marketCapUsd'],
+      volumeUsd24Hr: double.parse(json['volumeUsd24Hr']),
+      priceUsd: double.parse(json['priceUsd']),
+      changePercent24Hr: double.parse(json['changePercent24Hr']),
     );
   }
 }
