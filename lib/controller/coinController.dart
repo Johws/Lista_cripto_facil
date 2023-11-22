@@ -1,31 +1,61 @@
+// lib/controller/coin_controller.dart
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:lista_cripto_facil/controller/coinEntendide.dart';
-import 'package:lista_cripto_facil/model/listModel.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 class CoinController extends ChangeNotifier {
   List<CoinEntidade>? coinList;
   StreamController<List<CoinEntidade>> controller =
       StreamController<List<CoinEntidade>>();
+  late WebSocketChannel _channel;
 
   Stream<List<CoinEntidade>> get coinListStream => controller.stream;
 
-  final ListModel _model = ListModel();
+  CoinController() {
+    connectToWebSocket();
+  }
 
-  Future<void> fetchCoinList() async {
-    try {
-      var fetchedCoinList = await _model.fetchData();
-      coinList = fetchedCoinList; // Atualiza a variável local
-      controller.add(coinList!); // Adiciona a lista ao Stream
-      notifyListeners();
-    } catch (e) {
-      print('Error: $e');
-    }
+  void connectToWebSocket() {
+    _channel = WebSocketChannel.connect(
+        Uri.parse('wss://api.coinext.com.br/WSGateway/'));
+
+    final payload = {
+      "OMSId": 1,
+      "InstrumentId": 1,
+      "Interval": 60,
+    };
+
+    final frame = {
+      'm': 0,
+      'i': 2,
+      'n': 'SubscribeTicker',
+      'o': jsonEncode(payload),
+    };
+
+    _channel.sink.add(jsonEncode(frame));
+
+    _channel.stream.listen(
+      (dynamic message) {
+        final data = jsonDecode(message)['o'];
+        final coinData = CoinEntidade.fromJson(data);
+        coinList = [coinData];
+        controller.add(coinList!);
+      },
+      onDone: () {
+        _channel.sink.close();
+      },
+      onError: (error) {
+        throw Exception('WebSocket error: $error');
+      },
+    );
   }
 
   @override
   void dispose() {
-    controller.close(); // Fecha o StreamController
+    controller.close();
+    _channel.sink.close();
     super.dispose();
   }
 }

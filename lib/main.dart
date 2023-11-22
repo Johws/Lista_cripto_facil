@@ -1,6 +1,7 @@
+// lib/main.dart
 import 'package:flutter/material.dart';
 import 'package:lista_cripto_facil/controller/coinController.dart';
-import 'package:lista_cripto_facil/view/CoinListView.dart'; // Confirme se está importando a classe correta
+import 'package:lista_cripto_facil/view/coinlistView.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -13,8 +14,8 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => CoinController(),
       child: MaterialApp(
-        home:
-            CoinListView(), // Certifique-se de estar chamando a classe correta
+        home: CoinListView(),
+        theme: ThemeData.dark(),
       ),
     );
   }
